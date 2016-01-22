@@ -1,0 +1,64 @@
+<html>
+	<head>
+		<title>Status Page</title>
+		
+		<style>
+		    .launcher-button .lines, .launcher-button .lines:before, .launcher-button .lines:after {
+		        background: #000000;
+		    }
+		    dt {font-weight: bold;}
+		    dt:after {content: ':';}
+		    body {font-family:sans-serif;}
+		    .cluster{padding: 20px;}
+		    .cluster dl {padding: 10px;}
+		</style>
+
+		<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+		<script data-th-src="${portal.assetUrl({'_path=js/highcharts/js/highcharts.js'})}" src=""></script>
+		<script data-th-src="${portal.assetUrl({'_path=js/statuspage.js'})}" src=""></script>
+
+	</head>
+	<body>
+
+		<h1>Status Page</h1>
+
+		<div style="display:table-row;width:100%">
+		<div style="display:table-cell;width:50vw">
+			<h2>Version</h2>
+			<p data-th-text="${server.version}"></p>
+		</div>
+		<div style="display:table-cell;width:50vw;text-align:right">
+			<h2>Uptime</h2>
+			<p id="uptime" data-th-text="${jvmInfo.upTime}"></p>
+		</div>
+		</div>
+
+		
+		<div id="heap" style="height:33vh;width:100%"></div>
+
+		<div id="nonheap" style="height:33vh;width:100%"></div>
+
+		<h2>Clusters</h2>
+		<div class="cluster" data-th-style="${'background-color:' + cluster.state}">
+			<div class="cluster-name" style="text-align:center">
+				<strong data-th-text="${cluster.name}"></strong>
+			</div>
+
+			<dl data-th-each="node : ${cluster.members}" style="background-color:white;width:300px;">
+				<img data-th-if="${node.isMaster}" data-th-src="${portal.assetUrl({'_path=img/Darth-Vader-icon.png'})}" src=""/>
+				<img data-th-unless="${node.isMaster}" data-th-src="${portal.assetUrl({'_path=img/Stormtrooper-icon.png'})}" src=""/>
+				<img data-th-if="${node.id == cluster.localNode.id}" data-th-src="${portal.assetUrl({'_path=img/Death-Star-icon.png'})}" src=""/>
+				<p data-th-text="${node.isMaster}"></p>
+				<dt>Host</dt>
+				<dd data-th-text="${node.hostName}"></dd>
+				<dt>ID</dt>
+				<dd data-th-text="${node.id}"></dd>
+				<dt>Version</dt>
+				<dd data-th-text="${node.version}"></dd>
+				<dt>Address</dt>
+				<dd data-th-text="${node.address}"></dd>
+			</dl>
+		</div>
+		
+	</body>
+</html>
